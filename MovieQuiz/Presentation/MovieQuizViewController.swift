@@ -3,7 +3,7 @@ import UIKit
 final class MovieQuizViewController: UIViewController {
     //! Discuss
     // 1) Why we write `UIColor.ypGreen.cgColor` instead of `UIColor.ypGreen`?
-    // 2) Почему `showAnswerResult(isCorrect: Bool)` это метод-
+    // 2) Почему `showAnswerResult(isCorrect: Bool)` это метод-приложение?
     //! End of `Discuss`
     // MARK: - Lifecycle
     private var currentQuestionIndex = 0 // переменная с индексом текущего вопроса
