@@ -69,27 +69,29 @@ final class MovieQuizViewController: UIViewController {
      text: "Рейтинг этого фильма больше чем 6?",//Настоящий рейтинг: 5,8
      correctAnswer: false)
 ]// конец массива вопросов
+    @IBOutlet private weak var infoLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        infoLabel.font = UIFont(name: "YSDisplay-Medium", size: 40)
         show(quiz: convert(model: questions[currentQuestionIndex]))
     }
+    /// Конвертация мокового вопроса во ViewModel экрана вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        // метод конвертации, который принимает моковый вопрос и возвращает вью модель для экрана вопроса
         let questionStep = QuizStepViewModel(
               image: UIImage(named: model.image) ?? UIImage(),
               question: model.text,
               questionNumber: "\(currentQuestionIndex+1)/\(questions.count)")
         return questionStep
     }
+    /// Вывод на экран вопроса (принимает  ViewModel вопроса)
     private func show(quiz step: QuizStepViewModel) {
-            // вывод на экран вопроса (принимает  ViewModel вопроса)
         counterLabel.text = step.questionNumber
         imageView.image = step.image
-        imageView.layer.masksToBounds = true // даём разрешение на рисование рамки
+        imageView.layer.masksToBounds = true // даём разрешение на рамку
         imageView.layer.borderWidth = 1  // толщина рамки
         imageView.layer.borderColor = UIColor.ypBlack.cgColor // красим рамку
         imageView.layer.cornerRadius = 20 // радиус скругления углов 
