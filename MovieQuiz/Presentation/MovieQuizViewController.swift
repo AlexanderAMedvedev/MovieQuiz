@@ -73,10 +73,16 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var counterLabel: UILabel!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var textLabel: UILabel!
+    @IBOutlet weak var titleNoButton: UIButton!
+    @IBOutlet weak var titleYesButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        infoLabel.font = UIFont(name: "YSDisplay-Medium", size: 40)
+        infoLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
+        titleNoButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        titleYesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         show(quiz: convert(model: questions[currentQuestionIndex]))
     }
     /// Конвертация мокового вопроса во ViewModel экрана вопроса
