@@ -6,6 +6,9 @@ final class MovieQuizViewController: UIViewController {
     // 2) Почему `showAnswerResult(isCorrect: Bool)` это метод-приложение?
     //! End of `Discuss`
     // MARK: - Lifecycle
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     private var currentQuestionIndex = 0 // переменная с индексом текущего вопроса
     private var correctAnswers = 0 // переменная с количеством правильных ответов
     private struct QuizQuestion {
