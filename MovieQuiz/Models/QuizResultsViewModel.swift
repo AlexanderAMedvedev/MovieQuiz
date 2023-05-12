@@ -8,11 +8,11 @@
 import Foundation
 
 ///ViewModel для состояния "Результат квиза"
- struct QuizResultsViewModel {
-  // строка с заголовком алерта
+struct QuizResultsViewModel {
+  // строка с заголовком
   let title: String
   // строка с текстом о количестве набранных очков
   let text: String
-  // текст для кнопки алерта
+  // текст для кнопки
   let buttonText: String
 }
