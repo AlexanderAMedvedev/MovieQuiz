@@ -19,6 +19,8 @@ protocol StatisticsService {
     func setBestGame(_ newGameRecord: GameRecord)
     // учёт результата текущей игры для двух величин
     func store(totalCurrent: Int, correctCurrent: Int)
+    //to have the path to the sandBox
+    func printSandBox()
 }
 final class StatisticsServiceImplementation: StatisticsService {
     //UserDefaults - интерфейс к базе данных, содержащей  настройки пользователя, установленные "по умолчанию"
@@ -98,4 +100,5 @@ final class StatisticsServiceImplementation: StatisticsService {
          //сохранить новое значение
         userDefaults.set(totalCorrectStored, forKey: Keys.totalCorrect.rawValue)
     }
+    func printSandBox() { print(NSHomeDirectory()) }
 }

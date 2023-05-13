@@ -14,6 +14,4 @@ struct GameRecord: Codable {
     let total: Int
     //дата завершения квиза
     let date: Date
-    
-
 }

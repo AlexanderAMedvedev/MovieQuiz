@@ -5,6 +5,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     // 1) Why we write `UIColor.ypGreen.cgColor` instead of `UIColor.ypGreen`?
     // 2) Почему `showAnswerResult(isCorrect: Bool)` это метод-приложение?
     // 3) Что значит "final class"?
+    //4 Can I leave some commands, needed only for iOS-developer? (like `printSandBox()`)
     //! End of `Discuss`
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -56,6 +57,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         titleNoButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         titleYesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         statistics = StatisticsServiceImplementation()
+        // Only for finding the path to sandBox: statistics?.printSandBox()
         /// вывод первого вопроса на экран в рамках паттерна "Делегат"
         questionFactory?.requestNextQuestion()
     }
@@ -85,17 +87,18 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         }
     }
     @IBAction private func noButtonClicked(_ sender: UIButton) {
+        sender.isEnabled = false
         let userAnswer: Bool = false
         guard let currentQuestion = currentQuestion else { return }
         showAnswerResult(isCorrect: userAnswer == currentQuestion.correctAnswer)
+        sender.isEnabled = true
     }
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        // insert isEnabled?
+        sender.isEnabled = false
         let userAnswer: Bool = true
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
+        guard let currentQuestion = currentQuestion else { return }
         showAnswerResult(isCorrect: userAnswer == currentQuestion.correctAnswer)
+        sender.isEnabled = true
     }
     private func showNextQuestionOrResults() {
         //переход в один из сценариев
@@ -141,7 +144,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     /// Метод для показа результатов раунда квиза
     private func show(quiz result: QuizResultsViewModel) {
-        //1) Создать экземпляр алерт
+        //1) Создать экземпляр алерта
             alertView = AlertPresenter(
                                        delegate: self,
                                        resultsViewModel: result
