@@ -1,6 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, AlertPresenterDelegate {
+final class MovieQuizViewController: UIViewController {
     //! Discuss
     // 1) Why we write `UIColor.ypGreen.cgColor` instead of `UIColor.ypGreen`?
     // 2) Почему `showAnswerResult(isCorrect: Bool)` это метод-приложение?
@@ -23,22 +23,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet weak var titleNoButton: UIButton!
     @IBOutlet weak var titleYesButton: UIButton!
-    // MARK: - QuestionFactoryDelegate
-    func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question = question else { return }
-            currentQuestion = question
-            let viewModel = convert(model: question)
-            DispatchQueue.main.async { [weak self] in
-                self?.show(quiz: viewModel)
-            }
-    }
-    // MARK: - AlertPresenterDelegate
-    func showAlert(alert: UIAlertController,
-                   completion: (() -> Void)?
-    ){
-        //Показать алерт
-        present(alert, animated: true, completion: completion)
-    }
     /// Конвертация мокового вопроса во ViewModel экрана вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(
@@ -151,5 +135,23 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             )
         //2) Показть алерт при помощи паттерна "Делегат"
         alertView?.prepareAlert()
+    }
+}
+extension MovieQuizViewController: QuestionFactoryDelegate {
+    func didReceiveNextQuestion(question: QuizQuestion?) {
+        guard let question = question else { return }
+            currentQuestion = question
+            let viewModel = convert(model: question)
+            DispatchQueue.main.async { [weak self] in
+                self?.show(quiz: viewModel)
+            }
+    }
+}
+extension MovieQuizViewController: AlertPresenterDelegate {
+    func showAlert(alert: UIAlertController,
+                   completion: (() -> Void)?
+    ){
+        //Показать алерт
+        present(alert, animated: true, completion: completion)
     }
 }
