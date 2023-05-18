@@ -6,12 +6,13 @@
 //
 
 import Foundation
+import UIKit
 
 struct AlertViewModel {
     let title: String
     let message: String
     let buttonText: String
     // The block to execute after the presentation of alert finishes (see `present(_:animated:completion:) for UIViewController`)
-    var completion: (() -> Void)? = nil
+    var handler: ((UIAlertAction) -> Void)?
 }
 

@@ -9,10 +9,5 @@ import Foundation
 import UIKit
 
 protocol AlertPresenterDelegate: AnyObject {
-    var correctAnswers: Int { get set }
-    var currentQuestionIndex: Int { get set }
-    var questionFactory: QuestionFactoryProtocol? { get }
-    func showAlert(alert: UIAlertController,
-                   completion: (() -> Void)?
-    )
+    func showAlert(alert: UIAlertController, completion: (() -> Void)?)
 }
