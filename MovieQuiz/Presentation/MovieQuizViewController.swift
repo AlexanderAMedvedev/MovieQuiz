@@ -10,12 +10,12 @@ final class MovieQuizViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-            var currentQuestionIndex = 0 // переменная с индексом текущего вопроса
-            var correctAnswers = 0 // переменная с количеством правильных ответов
+    private var currentQuestionIndex = 0 // переменная с индексом текущего вопроса
+    private var correctAnswers = 0 // переменная с количеством правильных ответов
     private let questionsAmount: Int = 10
-            var questionFactory: QuestionFactoryProtocol?
+    private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
-            var alertView: AlertPresenterProtocol?
+    private var alertView: AlertPresenterProtocol?
     private var statistics: StatisticsService?
     @IBOutlet private weak var infoLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
@@ -27,7 +27,7 @@ final class MovieQuizViewController: UIViewController {
     /// Конвертация мокового вопроса во ViewModel экрана вопроса
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(
-              image: UIImage(named: model.image) ?? UIImage(),
+              image: UIImage(data: model.image) ?? UIImage(),
               question: model.text,
               questionNumber: "\(currentQuestionIndex+1)/\(questionsAmount)")
         return questionStep
@@ -35,16 +35,19 @@ final class MovieQuizViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        questionFactory = QuestionFactory(delegate: self)
+        questionFactory = QuestionFactory(delegate: self, moviesLoader: MoviesLoader())
+        showLoadingIndicator()
+        questionFactory?.loadData()
         infoLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        textLabel.numberOfLines = 2
         textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         titleNoButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         titleYesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         statistics = StatisticsServiceImplementation()
-        // Only for finding the path to sandBox: statistics?.printSandBox()
-        /// вывод первого вопроса на экран в рамках паттерна "Делегат"
-        questionFactory?.requestNextQuestion()
+//вывод первого вопроса на экран в рамках паттерна "Делегат" в случае локальных данных
+       // questionFactory?.requestNextQuestion()
+// Only for finding the path to sandBox: statistics?.printSandBox()
     }
     /// Вывод на экран вопроса (принимает  ViewModel вопроса)
     private func show(quiz step: QuizStepViewModel) {
@@ -53,7 +56,7 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.masksToBounds = true // даём разрешение на рамку
         imageView.layer.borderWidth = 1  // толщина рамки
         imageView.layer.borderColor = UIColor.ypBlack.cgColor // красим рамку
-        imageView.layer.cornerRadius = 20 // радиус скругления углов 
+        imageView.layer.cornerRadius = 20 // радиус скругления углов
         textLabel.text = step.question
     }
     private func showAnswerResult(isCorrect: Bool) {
@@ -129,16 +132,60 @@ final class MovieQuizViewController: UIViewController {
     }
     /// Метод для показа результатов раунда квиза
     private func show(quiz result: QuizResultsViewModel) {
-        //1) Создать экземпляр алерта
-            alertView = AlertPresenter(
-                                       delegate: self,
-                                       resultsViewModel: result
-            )
+        //0 convert QuizResultsViewModel object to AlertModel object
+        var alertModel = AlertViewModel(
+            title: result.title,
+            message: result.text,
+            buttonText: result.buttonText
+        )
+        alertModel.handler = { [weak self] _ in
+            guard let self = self else { print("Can't assign proper handler for alertModel"); return}
+            // код, который сбрасывает игру и показывает первый вопрос
+            self.currentQuestionIndex = 0
+            self.questionFactory?.requestNextQuestion()
+            self.correctAnswers =  0
+        }
+        //1 init alert object
+        alertView = AlertPresenter(
+                                  delegate: self,
+                                  alertSome: alertModel
+                                  )
         //2) Показть алерт при помощи паттерна "Делегат"
-        alertView?.prepareAlert()
+        alertView?.show()
+    }
+    private func showLoadingIndicator() {
+        downloadMoviesIndicator.isHidden = false // говорим, что индикатор загрузки не скрыт
+        downloadMoviesIndicator.startAnimating() // включаем анимацию
+    }
+    private func showNetworkError(message: String) {
+        downloadMoviesIndicator.isHidden = true
+    
+        var alertModel = AlertViewModel(
+            title: "Что-то пошло не так",
+            message: "Невозможно загрузить данные",
+            buttonText: "Попробовать ещё раз"
+        )
+        alertModel.handler = { [weak self] _ in
+            guard let self = self else { print("Can't assign proper handler for alertModel"); return}
+        }
+        alertView = AlertPresenter(
+                                  delegate: self,
+                                  alertSome: alertModel
+                                  )
+        alertView?.show()
     }
 }
 extension MovieQuizViewController: QuestionFactoryDelegate {
+    func didLoadDataFromServer() {
+        downloadMoviesIndicator.isHidden = true // скрываем индикатор загрузки
+        questionFactory?.requestNextQuestion()
+    }
+    
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
+        //localizedDescription - Retrieve(Извлекать) the localized description for this error.
+    }
+    
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else { return }
             currentQuestion = question
@@ -149,9 +196,7 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
     }
 }
 extension MovieQuizViewController: AlertPresenterDelegate {
-    func showAlert(alert: UIAlertController,
-                   completion: (() -> Void)?
-    ){
+    func showAlert(alert: UIAlertController, completion: (() -> Void)?){
         //Показать алерт
         present(alert, animated: true, completion: completion)
     }
