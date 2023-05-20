@@ -1,6 +1,7 @@
 import UIKit
 
 final class MovieQuizViewController: UIViewController {
+    //Any attempt to subclass a final class is reported as a compile-time error.
     //! Discuss
     // 1) Why we write `UIColor.ypGreen.cgColor` instead of `UIColor.ypGreen`?
     // 2) Почему `showAnswerResult(isCorrect: Bool)` это метод-приложение?

@@ -7,8 +7,11 @@
 
 import Foundation
 
+protocol NetworkRouting {
+    func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void)
+}
 /// Отвечает за загрузку данных по URL
-struct NetworkClient {
+struct NetworkClient: NetworkRouting {//Routing - Маршрутизация
     //1 why we neeed `task.resume()` in the end?
     // A: Newly-initialized tasks begin in a suspended state, so you need to call this method to start the task.
     //2 why we do not have in func fetch `return smth: URLSessionDataTask`?
