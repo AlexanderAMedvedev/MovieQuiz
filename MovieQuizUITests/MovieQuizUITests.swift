@@ -26,13 +26,86 @@ final class MovieQuizUITests: XCTestCase {
         app.terminate()
         app = nil
     }
-    
-    func testScreenCast() throws {
+    func testYesButton() {
+        sleep(3)
+
+        let firstPoster = app.images["Poster"] // находим первоначальный постер
+        let firstPosterData = firstPoster.screenshot().pngRepresentation
+        let firstIndexLabel = app.staticTexts["Index"]
+        XCTAssertEqual(firstIndexLabel.label, "1/10")
+        
+        app.buttons["Yes"].tap() // находим кнопку `Да` и нажимаем её
+        sleep(3)
+
+        let secondPoster = app.images["Poster"] // ещё раз находим постер
+        let secondPosterData = secondPoster.screenshot().pngRepresentation
+        let secondIndexLabel = app.staticTexts["Index"]
+        XCTAssertEqual(secondIndexLabel.label, "2/10")
+        XCTAssertNotEqual(firstPosterData, secondPosterData)
+        }
+    func testNoButton() {
+        sleep(3)
+
+        let firstPoster = app.images["Poster"]
+        let firstPosterData = firstPoster.screenshot().pngRepresentation
+        let firstIndexLabel = app.staticTexts["Index"]
+        XCTAssertEqual(firstIndexLabel.label, "1/10")
+        
+        app.buttons["No"].tap()
+        sleep(3)
+
+        let secondPoster = app.images["Poster"]
+        let secondPosterData = secondPoster.screenshot().pngRepresentation
+        let secondIndexLabel = app.staticTexts["Index"]
+        XCTAssertEqual(secondIndexLabel.label, "2/10")
+        XCTAssertNotEqual(firstPosterData, secondPosterData)
+        }
+    func testEndQuizAlert() {
+//1 Как указать id алёрта, который получаем в конце игры?
+        var i: Int = 1
+        sleep(3)
+        while i <= 10 {
+            app.buttons["No"].tap()
+            i += 1
+            sleep(3)
+        }
+      
+    let alert = app.alerts["Этот раунд окончен!"]
+    let  titleAlert = alert.label
+    let  buttonTextAlert = alert.buttons.firstMatch.label
+    XCTAssertTrue(alert.exists)
+    XCTAssertEqual(titleAlert,"Этот раунд окончен!")
+    XCTAssertEqual(buttonTextAlert, "Сыграть ещё раз")
+        /* Part of the UI Test Record
+        let scrollViewsQuery = app.alerts["Этот раунд окончен!"].scrollViews
+        scrollViewsQuery.otherElements.containing(.staticText, identifier:"Этот раунд окончен!").element.tap()
+        
+        let elementsQuery = scrollViewsQuery.otherElements
+        elementsQuery.staticTexts["Ваш результат: 3/10\nКоличество сыгранных квизов: 19\nРекорд: 10/10 (14.05.23 09:38)\nСредняя точность: 48.95%"].tap()
+        elementsQuery.buttons["Сыграть ещё раз"].tap()
+        */
+    }
+    func testStartSecondQuiz() {
+        var i: Int = 1
+        sleep(3)
+        while i <= 10 {
+            app.buttons["No"].tap()
+            i += 1
+            sleep(3)
+        }
+        let alert = app.alerts["Этот раунд окончен!"]
+        alert.buttons.firstMatch.tap()
+        sleep(3)
+        let poster = app.images["Poster"]
+        let indexLabel = app.staticTexts["Index"]
+        XCTAssertFalse(alert.exists)
+        XCTAssertTrue(poster.exists)
+        XCTAssertEqual(indexLabel.label, "1/10")
+    }
+   /* func testScreenCast() throws {
         
         app.buttons["Нет"].tap() //@NSCopying var buttons: XCUIElementQuery { get } - A query(запрос) that matches(приводить в соответстве) button control elements.
-
-                
-    }//Cast-муляж
+    }//Cast-муляж */
     
     /*func testExample() throws {
         // UI tests must launch the application that they test.
