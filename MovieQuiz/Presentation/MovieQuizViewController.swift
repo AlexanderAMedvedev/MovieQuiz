@@ -25,8 +25,8 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var titleNoButton: UIButton!
     @IBOutlet private weak var titleYesButton: UIButton!
     @IBOutlet private weak var downloadMoviesIndicator: UIActivityIndicatorView!
-    /// Конвертация мокового вопроса во ViewModel экрана вопроса
-    private func convert(model: QuizQuestion) -> QuizStepViewModel {
+    
+    private func convert(model: QuizQuestion) -> QuizStepViewModel { // Конвертация вопроса в ViewModel
         let questionStep = QuizStepViewModel(
               image: UIImage(data: model.image) ?? UIImage(),
               question: model.text,
