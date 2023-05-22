@@ -59,6 +59,9 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.borderColor = UIColor.ypBlack.cgColor // красим рамку
         imageView.layer.cornerRadius = 20 // радиус скругления углов
         textLabel.text = step.question
+        // make the buttons ready for user's tap
+        titleNoButton.isEnabled = true
+        titleYesButton.isEnabled = true
     }
     private func showAnswerResult(isCorrect: Bool) {
     // метод красит рамку
@@ -80,14 +83,12 @@ final class MovieQuizViewController: UIViewController {
         let userAnswer: Bool = false
         guard let currentQuestion = currentQuestion else { return }
         showAnswerResult(isCorrect: userAnswer == currentQuestion.correctAnswer)
-        sender.isEnabled = true
     }
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         sender.isEnabled = false
         let userAnswer: Bool = true
         guard let currentQuestion = currentQuestion else { return }
         showAnswerResult(isCorrect: userAnswer == currentQuestion.correctAnswer)
-        sender.isEnabled = true
     }
     private func showNextQuestionOrResults() {
         //переход в один из сценариев
@@ -143,8 +144,8 @@ final class MovieQuizViewController: UIViewController {
             guard let self = self else { print("Can't assign proper handler for alertModel"); return}
             // код, который сбрасывает игру и показывает первый вопрос
             self.currentQuestionIndex = 0
+            self.correctAnswers = 0
             self.questionFactory?.requestNextQuestion()
-            self.correctAnswers =  0
         }
         //1 init alert object
         alertView = AlertPresenter(
