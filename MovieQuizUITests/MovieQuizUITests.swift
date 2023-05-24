@@ -102,25 +102,4 @@ final class MovieQuizUITests: XCTestCase {
         XCTAssertTrue(poster.exists)
         XCTAssertEqual(indexLabel.label, "1/10")
     }
-   /* func testScreenCast() throws {
-        
-        app.buttons["Нет"].tap() //@NSCopying var buttons: XCUIElementQuery { get } - A query(запрос) that matches(приводить в соответстве) button control elements.
-    }//Cast-муляж */
-    
-    /*func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }*/
-
-   /* func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
-        }
-    } */
 }
