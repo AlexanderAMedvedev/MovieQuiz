@@ -12,9 +12,9 @@ final class MovieQuizViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
+    private var currentQuestion: QuizQuestion?
     private var correctAnswers = 0 // переменная с количеством правильных ответов
     private var questionFactory: QuestionFactoryProtocol?
-    private var currentQuestion: QuizQuestion?
     private var alertView: AlertPresenterProtocol?
     private var statistics: StatisticsService?
     @IBOutlet private weak var infoLabel: UILabel!
@@ -28,6 +28,7 @@ final class MovieQuizViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter.viewController = self
         questionFactory = QuestionFactory(delegate: self, moviesLoader: MoviesLoader())
         showLoadingIndicator()
         questionFactory?.loadData()
@@ -55,7 +56,7 @@ final class MovieQuizViewController: UIViewController {
         titleNoButton.isEnabled = true
         titleYesButton.isEnabled = true
     }
-    private func showAnswerResult(isCorrect: Bool) {
+    func showAnswerResult(isCorrect: Bool) {
     // метод красит рамку
         imageView.layer.borderWidth = 8  // толщина рамки
         if isCorrect {
@@ -72,15 +73,13 @@ final class MovieQuizViewController: UIViewController {
     }
     @IBAction private func noButtonClicked(_ sender: UIButton) {
         sender.isEnabled = false
-        let userAnswer: Bool = false
-        guard let currentQuestion = currentQuestion else { return }
-        showAnswerResult(isCorrect: userAnswer == currentQuestion.correctAnswer)
+        presenter.currentQuestion = currentQuestion
+        presenter.noButtonClicked()
     }
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         sender.isEnabled = false
-        let userAnswer: Bool = true
-        guard let currentQuestion = currentQuestion else { return }
-        showAnswerResult(isCorrect: userAnswer == currentQuestion.correctAnswer)
+        presenter.currentQuestion = currentQuestion
+        presenter.yesButtonClicked()
     }
     private func showNextQuestionOrResults() {
         //переход в один из сценариев
