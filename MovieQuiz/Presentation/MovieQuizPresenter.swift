@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 final class MovieQuizPresenter {
+    // 1) Почему `showAnswerResult` это метод-приложение?
     var questionFactory: QuestionFactoryProtocol?
     private let statistics: StatisticsService!
     private weak var viewController: MovieQuizViewController?
@@ -22,8 +23,8 @@ final class MovieQuizPresenter {
         statistics = StatisticsServiceImplementation()
         
         questionFactory = QuestionFactory(delegate: self, moviesLoader: MoviesLoader())
-        questionFactory?.loadData()
         viewController.showLoadingIndicator()
+        questionFactory?.loadData()
     }
     private func isLastQuestion() -> Bool {
             currentQuestionIndex == questionsAmount - 1
@@ -34,8 +35,9 @@ final class MovieQuizPresenter {
     private func switchToNextQuestion() {
             currentQuestionIndex += 1
     }
-    
-    private func convert(model: QuizQuestion) -> QuizStepViewModel { // Конвертация вопроса в ViewModel
+    // func convert - SHOULD BE PRIVATE (deleted `private` due to `MovieQuizPresenterTests`)
+    // search by Find navigator of `convert` within the project showed, that I can delete this `private`
+    func convert(model: QuizQuestion) -> QuizStepViewModel { // Конвертация вопроса в ViewModel
         let questionStep = QuizStepViewModel(
               image: UIImage(data: model.image) ?? UIImage(),
               question: model.text,
@@ -54,7 +56,7 @@ final class MovieQuizPresenter {
     func yesButtonClicked() {
         didAnswer(isYes: true)
     }
-    func showAnswerResult(isCorrect: Bool) {
+    private func showAnswerResult(isCorrect: Bool) {
         if isCorrect {
             correctAnswers += 1
             viewController?.frameHighlight(isCorrect)

@@ -4,7 +4,6 @@ final class MovieQuizViewController: UIViewController {
     //Any attempt to subclass a final class is reported as a compile-time error.
     //! Discuss
     // 1) Why we write `UIColor.ypGreen.cgColor` instead of `UIColor.ypGreen`?
-    // 2) Почему `showAnswerResult(isCorrect: Bool)` это метод-приложение?
     // 3) Что значит "final class"?
     //4 Can I leave some commands, needed only for iOS-developer? (like `printSandBox()`)
     //! End of `Discuss`
@@ -57,7 +56,7 @@ final class MovieQuizViewController: UIViewController {
         presenter.yesButtonClicked()
     }
     func frameHighlight(_ firstColor: Bool) {
-        imageView.layer.borderWidth = 8  
+        imageView.layer.borderWidth = 8
         imageView.layer.borderColor = firstColor ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
     }
     /// Метод для показа результатов раунда квиза
@@ -84,11 +83,11 @@ final class MovieQuizViewController: UIViewController {
         alertView?.show()
     }
     func showLoadingIndicator() {
-        downloadMoviesIndicator.isHidden = false // говорим, что индикатор загрузки не скрыт
-        downloadMoviesIndicator.startAnimating() // включаем анимацию
+        downloadMoviesIndicator?.isHidden = false // говорим, что индикатор загрузки не скрыт
+        downloadMoviesIndicator?.startAnimating() // включаем анимацию
     }
     func showNetworkError(message: String) {
-        downloadMoviesIndicator.isHidden = true
+        downloadMoviesIndicator?.isHidden = true
     
         var alertModel = AlertViewModel(
             title: "Что-то пошло не так",
