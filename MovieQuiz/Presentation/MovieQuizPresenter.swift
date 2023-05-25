@@ -12,8 +12,8 @@ final class MovieQuizPresenter {
     var questionFactory: QuestionFactoryProtocol?
     private let statistics: StatisticsService!
     private weak var viewController: MovieQuizViewController?
-    let questionsAmount: Int = 10
-    var currentQuestion: QuizQuestion?
+    private let questionsAmount: Int = 10
+    private var currentQuestion: QuizQuestion?
     private var currentQuestionIndex: Int = 0 // переменная с индексом текущего вопроса
     var correctAnswers: Int = 0
     
@@ -24,19 +24,18 @@ final class MovieQuizPresenter {
         questionFactory = QuestionFactory(delegate: self, moviesLoader: MoviesLoader())
         questionFactory?.loadData()
         viewController.showLoadingIndicator()
-
     }
-    func isLastQuestion() -> Bool {
+    private func isLastQuestion() -> Bool {
             currentQuestionIndex == questionsAmount - 1
     }
     func resetQuestionIndex() {
             currentQuestionIndex = 0
     }
-    func switchToNextQuestion() {
+    private func switchToNextQuestion() {
             currentQuestionIndex += 1
     }
     
-    func convert(model: QuizQuestion) -> QuizStepViewModel { // Конвертация вопроса в ViewModel
+    private func convert(model: QuizQuestion) -> QuizStepViewModel { // Конвертация вопроса в ViewModel
         let questionStep = QuizStepViewModel(
               image: UIImage(data: model.image) ?? UIImage(),
               question: model.text,
@@ -47,13 +46,26 @@ final class MovieQuizPresenter {
         let userAnswer: Bool = isYes
         guard let currentQuestion = currentQuestion else {
             return }
-        viewController?.showAnswerResult(isCorrect: userAnswer == currentQuestion.correctAnswer)
+        showAnswerResult(isCorrect: userAnswer == currentQuestion.correctAnswer)
     }
     func noButtonClicked() {
         didAnswer(isYes: false)
     }
     func yesButtonClicked() {
         didAnswer(isYes: true)
+    }
+    func showAnswerResult(isCorrect: Bool) {
+        if isCorrect {
+            correctAnswers += 1
+            viewController?.frameHighlight(isCorrect)
+        } else {
+            viewController?.frameHighlight(isCorrect)
+        }
+        // через 1 секунду c помощью диспетчера задач
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self = self else { return }
+            self.showNextQuestionOrResults()
+        }
     }
      func showNextQuestionOrResults() {
         //переход в один из сценариев

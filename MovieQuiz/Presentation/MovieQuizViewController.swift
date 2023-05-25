@@ -31,7 +31,7 @@ final class MovieQuizViewController: UIViewController {
         textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         titleNoButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         titleYesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
-//вывод первого вопроса на экран в рамках паттерна "Делегат" в случае локальных данных
+//вывод первого вопроса на экран в рамках паттерна "Делегат" в случае локальных данных (
        // questionFactory?.requestNextQuestion()
 // Only for finding the path to sandBox: statistics?.printSandBox()
     }
@@ -48,21 +48,6 @@ final class MovieQuizViewController: UIViewController {
         titleNoButton.isEnabled = true
         titleYesButton.isEnabled = true
     }
-    func showAnswerResult(isCorrect: Bool) {
-    // метод красит рамку
-        imageView.layer.borderWidth = 8  // толщина рамки
-        if isCorrect {
-            presenter.correctAnswers += 1
-            imageView.layer.borderColor = UIColor.ypGreen.cgColor
-        } else {
-            imageView.layer.borderColor = UIColor.ypRed.cgColor
-        } // красим рамку
-        // запускаем задачу через 1 секунду c помощью диспетчера задач
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            guard let self = self else { return }
-            self.presenter.showNextQuestionOrResults()
-        }
-    }
     @IBAction private func noButtonClicked(_ sender: UIButton) {
         sender.isEnabled = false
         presenter.noButtonClicked()
@@ -71,7 +56,10 @@ final class MovieQuizViewController: UIViewController {
         sender.isEnabled = false
         presenter.yesButtonClicked()
     }
-
+    func frameHighlight(_ firstColor: Bool) {
+        imageView.layer.borderWidth = 8  
+        imageView.layer.borderColor = firstColor ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
+    }
     /// Метод для показа результатов раунда квиза
     func show(quiz result: QuizResultsViewModel) {
         //0 convert QuizResultsViewModel object to AlertModel object

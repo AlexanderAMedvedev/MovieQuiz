@@ -72,7 +72,7 @@ class QuestionFactory: QuestionFactoryProtocol {
                     print("Failed to load image")
                 }
                 
-                let delimiter: Int = 9
+                let delimiter: Int = 8
                 let text = "Рейтинг этого фильма больше \(delimiter)?"
                 guard let rating = Float(movie.rating) else {
                 print("Can not convert movie.rating to Float type."); return }
