@@ -1,6 +1,12 @@
 import UIKit
-
-final class MovieQuizViewController: UIViewController {
+protocol PresenterUseViewController: AnyObject {
+    func show(quiz step: QuizStepViewModel)
+    func frameHighlight(_ firstColor: Bool)
+    func show(quiz result: QuizResultsViewModel)
+    func showLoadingIndicator(parameter: Bool)
+    func showNetworkError(message: String)
+}
+final class MovieQuizViewController: UIViewController, PresenterUseViewController {
     //Any attempt to subclass a final class is reported as a compile-time error.
     //! Discuss
     // 1) Why we write `UIColor.ypGreen.cgColor` instead of `UIColor.ypGreen`?
@@ -82,12 +88,16 @@ final class MovieQuizViewController: UIViewController {
         //2) Показть алерт при помощи паттерна "Делегат"
         alertView?.show()
     }
-    func showLoadingIndicator() {
-        downloadMoviesIndicator?.isHidden = false // говорим, что индикатор загрузки не скрыт
-        downloadMoviesIndicator?.startAnimating() // включаем анимацию
+    func showLoadingIndicator(parameter: Bool) {
+        if  parameter == false {
+            downloadMoviesIndicator.isHidden = parameter // говорим, что индикатор загрузки не скрыт
+            downloadMoviesIndicator.startAnimating() }
+        else {
+            downloadMoviesIndicator.isHidden = parameter
+        }
     }
     func showNetworkError(message: String) {
-        downloadMoviesIndicator?.isHidden = true
+        showLoadingIndicator(parameter: true)
     
         var alertModel = AlertViewModel(
             title: "Что-то пошло не так",

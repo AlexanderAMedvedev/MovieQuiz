@@ -12,18 +12,18 @@ final class MovieQuizPresenter {
     // 1) Почему `showAnswerResult` это метод-приложение?
     var questionFactory: QuestionFactoryProtocol?
     private let statistics: StatisticsService!
-    private weak var viewController: MovieQuizViewController?
+    private weak var viewController: PresenterUseViewController?
     private let questionsAmount: Int = 10
     private var currentQuestion: QuizQuestion?
     private var currentQuestionIndex: Int = 0 // переменная с индексом текущего вопроса
     var correctAnswers: Int = 0
     
-    init(viewController: MovieQuizViewController) {
+    init(viewController: PresenterUseViewController) {
         self.viewController = viewController
         statistics = StatisticsServiceImplementation()
         
         questionFactory = QuestionFactory(delegate: self, moviesLoader: MoviesLoader())
-        viewController.showLoadingIndicator()
+        viewController.showLoadingIndicator(parameter: false)
         questionFactory?.loadData()
     }
     private func isLastQuestion() -> Bool {
@@ -126,7 +126,7 @@ extension MovieQuizPresenter: QuestionFactoryDelegate {
             }
     }
     func didLoadDataFromServer() {
-        viewController?.downloadMoviesIndicator.isHidden = true // скрываем индикатор загрузки
+        viewController?.showLoadingIndicator(parameter: true)// скрываем индикатор загрузки
         questionFactory?.requestNextQuestion()
     }
     
