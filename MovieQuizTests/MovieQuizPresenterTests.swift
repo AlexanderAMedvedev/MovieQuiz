@@ -8,10 +8,25 @@
 import Foundation
 import XCTest
 @testable import MovieQuiz
-
+final class MockMovieQuizViewController: PresenterUseViewController {
+    func show(quiz step: MovieQuiz.QuizStepViewModel) {
+    }
+    
+    func frameHighlight(_ firstColor: Bool) {
+    }
+    
+    func show(quiz result: MovieQuiz.QuizResultsViewModel) {
+    }
+    
+    func showLoadingIndicator(parameter: Bool) {
+    }
+    
+    func showNetworkError(message: String) {
+    }
+}
 final class MovieQuizPresenterTests: XCTestCase {
     func testMovieQuizPresenterConvertFunc() throws {
-        let viewController = MovieQuizViewController()
+        let viewController = MockMovieQuizViewController()
         let presenter = MovieQuizPresenter(viewController: viewController)
         
         let emptyData = Data()
