@@ -26,7 +26,6 @@ final class MovieQuizViewController: UIViewController, PresenterUseViewControlle
     @IBOutlet private weak var titleYesButton: UIButton!
     @IBOutlet weak var downloadMoviesIndicator: UIActivityIndicatorView!
     
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = MovieQuizPresenter(viewController: self)
@@ -36,20 +35,16 @@ final class MovieQuizViewController: UIViewController, PresenterUseViewControlle
         textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         titleNoButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         titleYesButton.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
-//вывод первого вопроса на экран в рамках паттерна "Делегат" в случае локальных данных (
-       // questionFactory?.requestNextQuestion()
-// Only for finding the path to sandBox: statistics?.printSandBox()
     }
-    /// Вывод на экран вопроса (принимает  ViewModel вопроса)
     func show(quiz step: QuizStepViewModel) {
         counterLabel.text = step.questionNumber
         imageView.image = step.image
-        imageView.layer.masksToBounds = true // даём разрешение на рамку
-        imageView.layer.borderWidth = 1  // толщина рамки
+        imageView.layer.masksToBounds = true                  // даём разрешение на рамку
+        imageView.layer.borderWidth = 1                       // толщина рамки
         imageView.layer.borderColor = UIColor.ypBlack.cgColor // красим рамку
-        imageView.layer.cornerRadius = 20 // радиус скругления углов
+        imageView.layer.cornerRadius = 20                     // радиус скругления углов
         textLabel.text = step.question
-        // make the buttons ready for user's tap
+        
         titleNoButton.isEnabled = true
         titleYesButton.isEnabled = true
     }
@@ -65,27 +60,20 @@ final class MovieQuizViewController: UIViewController, PresenterUseViewControlle
         imageView.layer.borderWidth = 8
         imageView.layer.borderColor = firstColor ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
     }
-    /// Метод для показа результатов раунда квиза
     func show(quiz result: QuizResultsViewModel) {
-        //0 convert QuizResultsViewModel object to AlertModel object
         var alertModel = AlertViewModel(
-            title: result.title,
-            message: result.text,
-            buttonText: result.buttonText
-        )
+                                        title: result.title,
+                                        message: result.text,
+                                        buttonText: result.buttonText
+                                        )
         alertModel.handler = { [weak self] _ in
             guard let self = self else { print("Can't assign proper handler for alertModel"); return}
-            // код, который сбрасывает игру и показывает первый вопрос
+            // сброс игры; показ первого вопроса
             self.presenter.resetQuestionIndex()
             self.presenter.correctAnswers = 0
             self.presenter.questionFactory?.requestNextQuestion()
         }
-        //1 init alert object
-        alertView = AlertPresenter(
-                                  delegate: self,
-                                  alertSome: alertModel
-                                  )
-        //2) Показть алерт при помощи паттерна "Делегат"
+        alertView = AlertPresenter(delegate: self, alertSome: alertModel)
         alertView?.show()
     }
     func showLoadingIndicator(parameter: Bool) {
@@ -98,23 +86,18 @@ final class MovieQuizViewController: UIViewController, PresenterUseViewControlle
     }
     func showNetworkError(message: String) {
         showLoadingIndicator(parameter: true)
-    
         var alertModel = AlertViewModel(
             title: "Что-то пошло не так",
             message: "Невозможно загрузить данные",
             buttonText: "Попробовать ещё раз"
         )
         alertModel.handler = { _ in }
-        alertView = AlertPresenter(
-                                  delegate: self,
-                                  alertSome: alertModel
-                                  )
+        alertView = AlertPresenter(delegate: self, alertSome: alertModel)
         alertView?.show()
     }
 }
 extension MovieQuizViewController: AlertPresenterDelegate {
     func showAlert(alert: UIAlertController, completion: (() -> Void)?){
-        //Показать алерт
         present(alert, animated: true, completion: completion)
     }
 }
