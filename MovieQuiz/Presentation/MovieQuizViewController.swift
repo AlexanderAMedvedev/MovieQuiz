@@ -24,7 +24,7 @@ final class MovieQuizViewController: UIViewController, PresenterUseViewControlle
     @IBOutlet private weak var textLabel: UILabel!
     @IBOutlet private weak var titleNoButton: UIButton!
     @IBOutlet private weak var titleYesButton: UIButton!
-    @IBOutlet weak var downloadMoviesIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var downloadMoviesIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

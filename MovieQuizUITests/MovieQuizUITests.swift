@@ -9,6 +9,7 @@ import XCTest
 
 final class MovieQuizUITests: XCTestCase {
     var app: XCUIApplication! //`class XCUIApplication: XCUIElement` - A proxy(уполномоченный) that can launch, monitor, and terminate a test application.//!-implicitly unwrapped optional
+    
     override func setUpWithError() throws {// setUp - помещать|is called before the invocation of each test method in the class
         try super.setUpWithError()
 
@@ -26,6 +27,7 @@ final class MovieQuizUITests: XCTestCase {
         app.terminate()
         app = nil
     }
+    
     func testYesButton() {
         sleep(3)
 
@@ -42,7 +44,8 @@ final class MovieQuizUITests: XCTestCase {
         let secondIndexLabel = app.staticTexts["Index"]
         XCTAssertEqual(secondIndexLabel.label, "2/10")
         XCTAssertNotEqual(firstPosterData, secondPosterData)
-        }
+    }
+    
     func testNoButton() {
         sleep(3)
 
@@ -59,7 +62,8 @@ final class MovieQuizUITests: XCTestCase {
         let secondIndexLabel = app.staticTexts["Index"]
         XCTAssertEqual(secondIndexLabel.label, "2/10")
         XCTAssertNotEqual(firstPosterData, secondPosterData)
-        }
+    }
+    
     func testEndQuizAlert() {
 //1 Как указать id алёрта, который получаем в конце игры?
         var i: Int = 1
@@ -70,21 +74,14 @@ final class MovieQuizUITests: XCTestCase {
             sleep(3)
         }
       
-    let alert = app.alerts["Этот раунд окончен!"]
-    let  titleAlert = alert.label
-    let  buttonTextAlert = alert.buttons.firstMatch.label
-    XCTAssertTrue(alert.exists)
-    XCTAssertEqual(titleAlert,"Этот раунд окончен!")
-    XCTAssertEqual(buttonTextAlert, "Сыграть ещё раз")
-        /* Part of the UI Test Record
-        let scrollViewsQuery = app.alerts["Этот раунд окончен!"].scrollViews
-        scrollViewsQuery.otherElements.containing(.staticText, identifier:"Этот раунд окончен!").element.tap()
-        
-        let elementsQuery = scrollViewsQuery.otherElements
-        elementsQuery.staticTexts["Ваш результат: 3/10\nКоличество сыгранных квизов: 19\nРекорд: 10/10 (14.05.23 09:38)\nСредняя точность: 48.95%"].tap()
-        elementsQuery.buttons["Сыграть ещё раз"].tap()
-        */
+        let alert = app.alerts["Этот раунд окончен!"]
+        let  titleAlert = alert.label
+        let  buttonTextAlert = alert.buttons.firstMatch.label
+        XCTAssertTrue(alert.exists)
+        XCTAssertEqual(titleAlert,"Этот раунд окончен!")
+        XCTAssertEqual(buttonTextAlert, "Сыграть ещё раз")
     }
+    
     func testStartSecondQuiz() {
         var i: Int = 1
         sleep(3)

@@ -83,10 +83,8 @@ final class MovieQuizPresenter {
             let currentGame = GameRecord(correct: correctAnswers, total: self.questionsAmount, date: Date())
             statistics.setBestGame(currentGame)
           
-            let record: String = """
-                                 \(statistics.bestGame.correct)/\(statistics.bestGame.total) \
-                                 (\(statistics.bestGame.date.dateTimeString))
-                                 """
+            let bestGame = statistics.bestGame
+            let record: String = "\(bestGame.correct)/\(bestGame.total) (\(bestGame.date.dateTimeString))"
         
             statistics.store(totalCurrent: self.questionsAmount, correctCurrent: correctAnswers)
             
@@ -101,7 +99,7 @@ final class MovieQuizPresenter {
                           Средняя точность: \(averageAccuracy)%
                         """,
                     buttonText: "Сыграть ещё раз"
-                                              )
+            )
       
             viewController?.show(quiz: result)
         } else {
