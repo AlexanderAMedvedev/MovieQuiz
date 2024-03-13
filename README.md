@@ -27,7 +27,6 @@
 
 ## Ссылки
 - [Макет Figma](https://www.figma.com/file/l0IMG3Eys35fUrbvArtwsR/YP-Quiz?node-id=34%3A243)
-- [API IMDb](https://imdb-api.com/api#Top250Movies-header)
 
 ## Команда проекта
 Проект выполнен только мною.
